@@ -1,412 +1,273 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LogSight — Log Analyzer</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LogSight</title>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:        #0f1117;
-      --bg-card:   #16191f;
-      --bg-hover:  #1c2029;
-      --border:    #23272f;
-      --border-2:  #2c313c;
-      --text:      #e2e5ec;
-      --text-2:    #8b92a5;
-      --text-3:    #4d5566;
-
-      --green:     #22c55e;
-      --green-bg:  #16251d;
-      --red:       #ef4444;
-      --red-bg:    #231414;
-      --amber:     #f59e0b;
-      --amber-bg:  #231d0d;
-      --blue:      #3b82f6;
-      --blue-bg:   #101c35;
-      --violet:    #a78bfa;
-
-      --radius:    10px;
-      --radius-sm: 6px;
-      --font:      'DM Sans', sans-serif;
-      --mono:      'DM Mono', monospace;
-
-      --shadow:    0 1px 3px rgba(0,0,0,.4), 0 4px 16px rgba(0,0,0,.2);
+      --bg:       #0d0d0f;
+      --s1:       #111114;
+      --s2:       #16161a;
+      --s3:       #1c1c22;
+      --border:   #1e1e26;
+      --border2:  #26262e;
+      --text:     #e2e2e8;
+      --dim:      #525264;
+      --dim2:     #3a3a48;
+      --green:    #22c55e;
+      --red:      #ef4444;
+      --amber:    #f59e0b;
+      --blue:     #5b67f8;
+      --violet:   #a78bfa;
+      --r:        10px;
     }
 
-    html { font-size: 15px; }
+    html { font-size: 14px; }
     body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font);
-      font-weight: 400;
-      line-height: 1.5;
-      min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
+      background: var(--bg); color: var(--text);
+      font-family: 'Geist', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased; min-height: 100vh;
     }
 
-    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar { width: 3px; }
     ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
 
-    /* ── HEADER */
+    /* HEADER */
     header {
+      height: 52px; padding: 0 28px;
       border-bottom: 1px solid var(--border);
-      padding: 0 32px;
-      height: 58px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
+      display: flex; align-items: center; justify-content: space-between;
       position: sticky; top: 0; z-index: 50;
-      background: rgba(15,17,23,.92);
-      backdrop-filter: blur(12px);
+      background: rgba(13,13,15,.92); backdrop-filter: blur(12px);
     }
-
-    .logo {
-      display: flex; align-items: center; gap: 10px;
-      font-size: 0.95rem; font-weight: 600; color: var(--text);
-      letter-spacing: -.01em;
-    }
+    .logo { display: flex; align-items: center; gap: 9px; }
     .logo-icon {
-      width: 28px; height: 28px;
-      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-      border-radius: 7px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 13px;
+      width: 26px; height: 26px; border-radius: 7px;
+      background: linear-gradient(135deg, var(--blue), var(--violet));
+      display: grid; place-items: center; font-size: 12px;
     }
-    .logo-badge {
-      font-size: 0.68rem; font-weight: 500;
-      color: var(--text-3);
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      padding: 2px 8px; border-radius: 20px;
-      font-family: var(--mono);
-    }
+    .logo-name { font-size: 13px; font-weight: 600; letter-spacing: -.01em; }
+    .logo-v { font-size: 10px; font-family: 'Geist Mono'; color: var(--dim2); background: var(--s2); border: 1px solid var(--border); padding: 1px 7px; border-radius: 20px; }
+    .hdr-right { display: flex; gap: 6px; align-items: center; }
 
-    .header-right { display: flex; align-items: center; gap: 8px; }
-
-    /* ── BUTTONS */
+    /* BUTTONS */
     .btn {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-family: var(--font); font-size: 0.83rem; font-weight: 500;
-      padding: 7px 14px; border-radius: var(--radius-sm);
-      cursor: pointer; border: 1px solid; transition: all .15s;
-      white-space: nowrap; letter-spacing: -.01em;
+      display: inline-flex; align-items: center; gap: 5px;
+      font-family: 'Geist'; font-size: 12px; font-weight: 500;
+      padding: 6px 13px; border-radius: 7px; cursor: pointer;
+      border: 1px solid; transition: all .12s; white-space: nowrap;
     }
+    .btn-primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+    .btn-primary:hover { background: #4a56e8; }
+    .btn-primary:disabled { opacity: .4; cursor: default; }
+    .btn-ghost { background: transparent; border-color: var(--border2); color: var(--dim); }
+    .btn-ghost:hover { color: var(--text); background: var(--s2); }
+    .btn-ghost:disabled { opacity: .4; cursor: default; }
+    .btn-success { background: transparent; border-color: rgba(34,197,94,.25); color: var(--green); }
+    .btn-success:hover { background: rgba(34,197,94,.06); }
     .btn svg { flex-shrink: 0; }
 
-    .btn-primary {
-      background: var(--blue); border-color: var(--blue);
-      color: #fff;
-    }
-    .btn-primary:hover { background: #2563eb; border-color: #2563eb; }
-    .btn-primary:disabled { opacity: .45; cursor: default; }
+    /* MAIN */
+    main { padding: 28px; max-width: 1160px; margin: 0 auto; }
 
-    .btn-ghost {
-      background: transparent; border-color: var(--border-2);
-      color: var(--text-2);
-    }
-    .btn-ghost:hover { background: var(--bg-hover); color: var(--text); border-color: var(--border-2); }
-
-    .btn-danger {
-      background: transparent; border-color: var(--border-2);
-      color: var(--red);
-    }
-    .btn-danger:hover { background: var(--red-bg); border-color: var(--red); }
-
-    /* ── LAYOUT */
-    main {
-      padding: 32px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    /* ── INPUT PAGE */
-    #input-section { display: flex; flex-direction: column; gap: 14px; }
+    /* INPUT */
+    #input-section { display: flex; flex-direction: column; gap: 12px; }
 
     .upload-area {
-      border: 1.5px dashed var(--border-2);
-      border-radius: var(--radius);
-      padding: 48px 32px;
-      text-align: center;
-      cursor: pointer;
-      transition: all .2s;
-      background: var(--bg-card);
+      border: 1.5px dashed var(--border2); border-radius: var(--r);
+      padding: 44px 32px; text-align: center; cursor: pointer;
+      background: var(--s1); transition: all .18s;
     }
     .upload-area:hover, .upload-area.drag {
-      border-color: var(--blue);
-      background: var(--blue-bg);
+      border-color: var(--blue); background: rgba(91,103,248,.04);
     }
     .upload-icon {
-      width: 44px; height: 44px; margin: 0 auto 14px;
-      background: var(--bg-hover);
-      border: 1px solid var(--border-2);
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      color: var(--text-2);
+      width: 42px; height: 42px; margin: 0 auto 12px;
+      background: var(--s2); border: 1px solid var(--border2); border-radius: 10px;
+      display: grid; place-items: center; color: var(--dim);
     }
-    .upload-title {
-      font-size: 0.92rem; font-weight: 500; color: var(--text);
-      margin-bottom: 4px;
-    }
-    .upload-sub { font-size: 0.78rem; color: var(--text-3); }
+    .upload-title { font-size: 13px; font-weight: 500; margin-bottom: 3px; }
+    .upload-sub { font-size: 11px; color: var(--dim); }
 
-    .input-row {
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 12px;
-    }
-    .input-label { font-size: 0.78rem; color: var(--text-3); font-weight: 500; }
-
-    .threshold-wrap { display: flex; align-items: center; gap: 10px; }
-    .threshold-wrap label { font-size: 0.78rem; color: var(--text-2); }
+    .controls-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+    .ctrl-label { font-size: 11px; color: var(--dim); }
+    .threshold-wrap { display: flex; align-items: center; gap: 8px; }
+    .threshold-wrap label { font-size: 11px; color: var(--dim); }
     input[type=range] {
-      -webkit-appearance: none; appearance: none;
-      width: 100px; height: 3px;
-      background: var(--border-2); border-radius: 2px; outline: none; cursor: pointer;
+      -webkit-appearance: none; width: 90px; height: 2px;
+      background: var(--border2); border-radius: 2px; outline: none; cursor: pointer;
     }
     input[type=range]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 14px; height: 14px;
-      background: var(--blue); border-radius: 50%;
-      border: 2px solid var(--bg);
+      -webkit-appearance: none; width: 12px; height: 12px;
+      background: var(--blue); border-radius: 50%; border: 2px solid var(--bg);
     }
-    #threshold-val {
-      font-family: var(--mono); font-size: 0.8rem;
-      color: var(--blue); min-width: 24px; font-weight: 500;
-    }
+    #threshold-val { font-family: 'Geist Mono'; font-size: 11px; color: var(--blue); min-width: 18px; }
 
     textarea {
-      width: 100%; height: 160px; resize: vertical;
-      background: var(--bg-card); border: 1px solid var(--border);
-      color: var(--text); font-family: var(--mono); font-size: 0.76rem;
-      padding: 14px 16px; border-radius: var(--radius); outline: none;
-      transition: border-color .15s; line-height: 1.6;
+      width: 100%; height: 150px; resize: vertical;
+      background: var(--s1); border: 1px solid var(--border); color: var(--text);
+      font-family: 'Geist Mono'; font-size: 11px; padding: 13px 15px;
+      border-radius: var(--r); outline: none; transition: border-color .12s; line-height: 1.65;
     }
-    textarea:focus { border-color: var(--border-2); }
-    textarea::placeholder { color: var(--text-3); }
+    textarea:focus { border-color: var(--border2); }
+    textarea::placeholder { color: var(--dim2); }
 
-    .error-box {
-      display: none; padding: 12px 16px;
-      background: var(--red-bg); border: 1px solid rgba(239,68,68,.25);
-      border-radius: var(--radius-sm); color: var(--red);
-      font-size: 0.82rem;
+    .err-box {
+      display: none; padding: 11px 15px;
+      background: rgba(239,68,68,.06); border: 1px solid rgba(239,68,68,.18);
+      border-radius: 7px; color: var(--red); font-size: 12px; font-family: 'Geist Mono';
     }
 
-    /* ── RESULTS */
-    #results { display: none; flex-direction: column; gap: 20px; }
+    /* RESULTS */
+    #results { display: none; flex-direction: column; gap: 16px; }
 
     /* Threat banner */
     .threat-banner {
-      border-radius: var(--radius); padding: 16px 20px;
+      border-radius: var(--r); padding: 14px 18px;
       display: flex; align-items: center; justify-content: space-between;
-      gap: 12px; flex-wrap: wrap;
-      border: 1px solid;
+      flex-wrap: wrap; gap: 10px; border: 1px solid;
     }
-    .threat-banner.SECURE   { background: var(--green-bg); border-color: rgba(34,197,94,.2); }
-    .threat-banner.WARNING  { background: var(--amber-bg); border-color: rgba(245,158,11,.2); }
-    .threat-banner.CRITICAL { background: var(--red-bg);   border-color: rgba(239,68,68,.25); }
+    .SECURE   { background: rgba(34,197,94,.06);  border-color: rgba(34,197,94,.18)!important; }
+    .WARNING  { background: rgba(245,158,11,.06); border-color: rgba(245,158,11,.18)!important; }
+    .CRITICAL { background: rgba(239,68,68,.07);  border-color: rgba(239,68,68,.2)!important; }
 
-    .threat-left { display: flex; align-items: center; gap: 12px; }
-    .threat-pill {
-      font-size: 0.7rem; font-weight: 600; letter-spacing: .06em;
-      text-transform: uppercase; padding: 3px 10px; border-radius: 20px;
-      border: 1px solid;
+    .t-pill {
+      font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 20px; border: 1px solid; font-family: 'Geist Mono';
     }
-    .SECURE  .threat-pill { color: var(--green); border-color: rgba(34,197,94,.3); background: rgba(34,197,94,.08); }
-    .WARNING .threat-pill { color: var(--amber); border-color: rgba(245,158,11,.3); background: rgba(245,158,11,.08); }
-    .CRITICAL .threat-pill{ color: var(--red);   border-color: rgba(239,68,68,.3);  background: rgba(239,68,68,.08); }
-    .threat-desc { font-size: 0.82rem; color: var(--text-2); }
+    .SECURE  .t-pill { color: var(--green); border-color: rgba(34,197,94,.3);  background: rgba(34,197,94,.08); }
+    .WARNING .t-pill { color: var(--amber); border-color: rgba(245,158,11,.3); background: rgba(245,158,11,.08); }
+    .CRITICAL .t-pill{ color: var(--red);  border-color: rgba(239,68,68,.3);  background: rgba(239,68,68,.08); }
+    .t-desc { font-size: 12px; color: var(--dim); }
 
-    /* Stats row */
-    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-    @media(max-width:700px) { .stats-row { grid-template-columns: 1fr 1fr; } }
-
-    .stat-card {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 18px 20px;
-      transition: border-color .15s;
+    /* Stats */
+    .stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+    .sc {
+      background: var(--s1); border: 1px solid var(--border); border-radius: var(--r);
+      padding: 16px 18px; transition: border-color .15s;
     }
-    .stat-card:hover { border-color: var(--border-2); }
-    .stat-value {
-      font-size: 1.9rem; font-weight: 600; line-height: 1;
-      font-family: var(--mono); letter-spacing: -.03em;
-      margin-bottom: 4px;
-    }
-    .stat-label { font-size: 0.75rem; color: var(--text-3); font-weight: 500; }
-    .stat-card.green .stat-value { color: var(--green); }
-    .stat-card.blue  .stat-value { color: var(--blue); }
-    .stat-card.red   .stat-value { color: var(--red); }
-    .stat-card.amber .stat-value { color: var(--amber); }
+    .sc:hover { border-color: var(--border2); }
+    .sc-val { font-size: 26px; font-weight: 700; font-family: 'Geist Mono'; letter-spacing: -.04em; line-height: 1; margin-bottom: 4px; }
+    .sc-lbl { font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: .08em; }
 
     /* Tabs */
     .tab-bar {
-      display: flex; gap: 2px;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 4px;
-      width: fit-content;
-      flex-wrap: wrap;
+      display: flex; gap: 2px; flex-wrap: wrap;
+      background: var(--s1); border: 1px solid var(--border);
+      border-radius: 8px; padding: 3px; width: fit-content;
     }
     .tab {
-      font-family: var(--font); font-size: 0.8rem; font-weight: 500;
-      padding: 6px 14px; border-radius: 5px;
-      cursor: pointer; border: none; background: none; color: var(--text-2);
-      transition: all .15s; white-space: nowrap;
+      font-family: 'Geist'; font-size: 12px; font-weight: 500;
+      padding: 5px 13px; border-radius: 6px; cursor: pointer;
+      border: none; background: none; color: var(--dim); transition: all .12s;
+      display: flex; align-items: center; gap: 5px;
     }
-    .tab:hover { color: var(--text); background: var(--bg-hover); }
-    .tab.active { color: var(--text); background: var(--bg-hover); box-shadow: var(--shadow); }
+    .tab:hover { color: var(--text); background: var(--s2); }
+    .tab.active { color: var(--text); background: var(--s2); }
+    .tab-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--red); display: none;
+    }
+    .tab-dot.show { display: inline-block; }
 
-    /* Panel */
-    .panel {
-      display: none;
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 24px;
-      animation: fadeIn .15s ease;
-    }
+    /* Panels */
+    .panel { display: none; background: var(--s1); border: 1px solid var(--border); border-radius: var(--r); padding: 22px; animation: fIn .15s ease; }
     .panel.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+    @keyframes fIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:none} }
 
-    .panel-header {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 20px; gap: 12px;
-    }
-    .panel-title { font-size: 0.85rem; font-weight: 600; color: var(--text); }
-    .panel-sub { font-size: 0.75rem; color: var(--text-3); }
+    .p-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; gap: 10px; }
+    .p-title { font-size: 13px; font-weight: 600; }
+    .p-sub { font-size: 11px; color: var(--dim); }
 
-    /* Bar charts */
-    .bar-row {
-      display: flex; align-items: center; gap: 12px;
-      margin-bottom: 10px;
-    }
-    .bar-key {
-      font-family: var(--mono); font-size: 0.75rem;
-      color: var(--text-2); min-width: 48px;
-    }
-    .bar-track {
-      flex: 1; height: 6px;
-      background: var(--bg-hover); border-radius: 3px; overflow: hidden;
-    }
-    .bar-fill { height: 100%; border-radius: 3px; transition: width .6s cubic-bezier(.4,0,.2,1); }
-    .bar-val { font-family: var(--mono); font-size: 0.72rem; color: var(--text-3); min-width: 42px; text-align: right; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 
-    /* Grid */
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    @media(max-width:720px) { .grid-2 { grid-template-columns: 1fr; } }
+    /* Bar rows */
+    .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+    .bar-key { font-family: 'Geist Mono'; font-size: 11px; color: var(--dim); min-width: 44px; }
+    .bar-track { flex: 1; height: 4px; background: var(--s3); border-radius: 2px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 2px; transition: width .6s cubic-bezier(.4,0,.2,1); }
+    .bar-val { font-family: 'Geist Mono'; font-size: 11px; color: var(--dim); min-width: 40px; text-align: right; }
 
-    /* KV list */
-    .kv-list { display: flex; flex-direction: column; gap: 0; }
-    .kv-row {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 9px 0; border-bottom: 1px solid var(--border);
-      font-size: 0.8rem;
-    }
+    /* KV */
+    .kv { display: flex; flex-direction: column; }
+    .kv-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 12px; }
     .kv-row:last-child { border-bottom: none; }
-    .kv-key { color: var(--text-2); }
-    .kv-val { font-family: var(--mono); color: var(--text); font-weight: 500; }
+    .kv-k { color: var(--dim); }
+    .kv-v { font-family: 'Geist Mono'; font-weight: 500; }
 
-    /* Alert cards (brute force) */
+    /* Alert cards */
     .alert-card {
-      border: 1px solid rgba(239,68,68,.2);
-      background: var(--red-bg);
-      border-radius: var(--radius-sm); padding: 16px 18px;
-      margin-bottom: 10px;
-      display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 12px;
+      border: 1px solid rgba(239,68,68,.15); background: rgba(239,68,68,.04);
+      border-radius: 8px; padding: 14px 16px; margin-bottom: 8px;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
     }
-    .alert-ip {
-      font-family: var(--mono); font-size: 0.85rem;
-      color: var(--red); font-weight: 500;
-      display: flex; align-items: center; gap: 8px;
-    }
-    .alert-ip::before {
-      content: '';
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--red);
-      box-shadow: 0 0 6px var(--red);
-      flex-shrink: 0;
-      animation: blink 1.4s ease-in-out infinite;
-    }
-    @keyframes blink { 0%,100%{opacity:1}50%{opacity:.3} }
+    .a-ip { font-family: 'Geist Mono'; font-size: 13px; color: var(--red); font-weight: 500; display: flex; align-items: center; gap: 7px; }
+    .a-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--red); box-shadow: 0 0 6px var(--red); animation: blink 1.4s infinite; }
+    @keyframes blink { 0%,100%{opacity:1}50%{opacity:.25} }
+    .a-metrics { display: flex; gap: 18px; }
+    .a-m { text-align: center; }
+    .a-mv { font-family: 'Geist Mono'; font-size: 18px; font-weight: 600; line-height: 1; }
+    .a-ml { font-size: 9px; color: var(--dim); text-transform: uppercase; letter-spacing: .06em; margin-top: 2px; }
 
-    .alert-metrics { display: flex; gap: 20px; }
-    .alert-metric { text-align: center; }
-    .alert-metric-val { font-family: var(--mono); font-size: 1.25rem; font-weight: 600; }
-    .alert-metric-lbl { font-size: 0.65rem; color: var(--text-3); text-transform: uppercase; letter-spacing: .05em; margin-top: 1px; }
+    /* DDoS cards */
+    .ddos-card {
+      border: 1px solid rgba(239,68,68,.2); background: rgba(239,68,68,.05);
+      border-radius: 8px; padding: 14px 16px; margin-bottom: 8px;
+    }
+    .ddos-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
+    .ddos-badge { font-size: 10px; font-family: 'Geist Mono'; font-weight: 600; color: var(--red); background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.2); padding: 2px 8px; border-radius: 20px; letter-spacing: .05em; }
+    .ddos-time { font-size: 11px; font-family: 'Geist Mono'; color: var(--dim); }
+    .ddos-stats { display: flex; gap: 20px; }
+    .ddos-stat-val { font-family: 'Geist Mono'; font-size: 20px; font-weight: 700; color: var(--red); }
+    .ddos-stat-lbl { font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: .06em; margin-top: 1px; }
+    .ddos-ips { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+    .ddos-ip-tag { font-size: 11px; font-family: 'Geist Mono'; padding: 2px 9px; background: var(--s3); border: 1px solid var(--border2); border-radius: 20px; color: var(--dim); }
 
-    /* Score bar */
-    .score-bar {
-      height: 4px; border-radius: 2px; margin-top: 3px;
-      background: linear-gradient(90deg, var(--green), var(--amber) 50%, var(--red));
+    /* Status grid */
+    .status-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px,1fr)); gap: 8px; }
+    .s-card {
+      background: var(--s2); border: 1px solid var(--border); border-radius: 8px;
+      padding: 13px 15px; border-left: 3px solid;
     }
-    .score-indicator {
-      width: 10px; height: 10px; border-radius: 50%;
-      background: var(--text); border: 2px solid var(--bg);
-      position: relative; top: -7px;
-      transition: left .4s;
-    }
-
-    /* Status cards */
-    .status-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
-    .status-card {
-      background: var(--bg-hover); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); padding: 14px 16px;
-      border-left: 3px solid;
-    }
-    .status-code { font-family: var(--mono); font-size: 1.2rem; font-weight: 600; }
-    .status-count { font-family: var(--mono); font-size: 1.5rem; font-weight: 600; color: var(--text); margin: 2px 0; }
-    .status-type { font-size: 0.68rem; color: var(--text-3); text-transform: uppercase; letter-spacing: .05em; }
+    .s-code { font-family: 'Geist Mono'; font-size: 16px; font-weight: 700; }
+    .s-count { font-family: 'Geist Mono'; font-size: 20px; font-weight: 600; color: var(--text); margin: 2px 0; }
+    .s-type { font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: .05em; }
 
     /* Table */
-    .table-wrap { overflow-x: auto; border-radius: var(--radius-sm); border: 1px solid var(--border); }
-    table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
-    thead tr { background: var(--bg-hover); }
-    th {
-      padding: 9px 14px; text-align: left;
-      font-size: 0.7rem; font-weight: 600; color: var(--text-3);
-      text-transform: uppercase; letter-spacing: .06em;
-      border-bottom: 1px solid var(--border);
-      white-space: nowrap;
-    }
-    td { padding: 9px 14px; border-bottom: 1px solid var(--border); }
+    .tbl-wrap { overflow-x: auto; border-radius: 7px; border: 1px solid var(--border); max-height: 340px; overflow-y: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    thead tr { background: var(--s2); position: sticky; top: 0; }
+    th { padding: 8px 13px; text-align: left; font-size: 10px; font-weight: 600; color: var(--dim); text-transform: uppercase; letter-spacing: .07em; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    td { padding: 8px 13px; border-bottom: 1px solid var(--border); }
     tr:last-child td { border-bottom: none; }
-    tbody tr:hover td { background: var(--bg-hover); }
-    .scroll-box { max-height: 360px; overflow-y: auto; }
+    tbody tr:hover td { background: var(--s2); }
 
-    .mono { font-family: var(--mono); }
+    /* Empty */
+    .empty { text-align: center; padding: 40px 20px; color: var(--dim2); }
+    .empty-icon { font-size: 20px; margin-bottom: 6px; }
+    .empty p { font-size: 12px; }
+
+    /* Spinner */
+    .spin { display: inline-block; width: 11px; height: 11px; border: 2px solid rgba(255,255,255,.2); border-top-color: currentColor; border-radius: 50%; animation: rot .5s linear infinite; }
+    @keyframes rot { to{transform:rotate(360deg)} }
+
+    .mono { font-family: 'Geist Mono'; }
     .c-green { color: var(--green); }
     .c-amber { color: var(--amber); }
     .c-red   { color: var(--red); }
     .c-blue  { color: var(--blue); }
-    .c-dim   { color: var(--text-3); }
+    .c-dim   { color: var(--dim); }
 
-    /* Empty state */
-    .empty {
-      text-align: center; padding: 48px 20px;
-      color: var(--text-3);
-    }
-    .empty-icon { font-size: 1.5rem; margin-bottom: 8px; }
-    .empty p { font-size: 0.82rem; }
-
-    /* Spinner */
-    .spinner {
-      display: inline-block; width: 12px; height: 12px;
-      border: 2px solid rgba(255,255,255,.2);
-      border-top-color: currentColor;
-      border-radius: 50%; animation: spin .55s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* Rank badge */
-    .rank { font-family: var(--mono); font-size: 0.7rem; color: var(--text-3); min-width: 22px; }
-    .ip-label { font-family: var(--mono); font-size: 0.8rem; min-width: 140px; }
-
-    @media(max-width:640px) {
-      main { padding: 20px 16px; }
+    @media(max-width:700px) {
+      main { padding: 16px; }
       header { padding: 0 16px; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .grid2 { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -414,91 +275,80 @@
 
 <header>
   <div class="logo">
-    <div class="logo-icon"></div>
-    LogSight
-    <span class="logo-badge">v2.0</span>
+    <div class="logo-icon">⬡</div>
+    <span class="logo-name">LogSight</span>
+    <span class="logo-v">v2.1</span>
   </div>
-  <div class="header-right">
+  <div class="hdr-right">
     <button class="btn btn-ghost" id="btn-sample">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
       Sample
     </button>
-    <button class="btn btn-ghost" id="btn-reset" style="display:none">
-      Resetar
+    <button class="btn btn-ghost" id="btn-reset" style="display:none">Resetar</button>
+    <button class="btn btn-success" id="btn-export-html" style="display:none">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Exportar HTML
     </button>
-    <button class="btn btn-ghost" id="btn-export" style="display:none">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Export JSON
+    <button class="btn btn-ghost" id="btn-export-json" style="display:none">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      JSON
     </button>
     <button class="btn btn-primary" id="btn-analyze">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       Analisar
     </button>
   </div>
 </header>
 
 <main>
-
   <!-- INPUT -->
   <div id="input-section">
     <div class="upload-area" id="drop-zone">
-      <input type="file" id="file-input" accept=".log,.txt" style="display:none" />
+      <input type="file" id="file-input" accept=".log,.txt" style="display:none"/>
       <div class="upload-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
       </div>
       <p class="upload-title">Arraste um arquivo .log ou clique para selecionar</p>
       <p class="upload-sub">Apache · Nginx · Auth logs</p>
     </div>
 
     <div>
-      <div class="input-row" style="margin-bottom:10px">
-        <span class="input-label">ou cole o conteúdo abaixo</span>
+      <div class="controls-row">
+        <span class="ctrl-label">ou cole o conteúdo abaixo</span>
         <div class="threshold-wrap">
           <label>Threshold brute force</label>
-          <input type="range" id="threshold" min="3" max="50" value="10" />
+          <input type="range" id="threshold" min="3" max="50" value="10"/>
           <span id="threshold-val">10</span>
         </div>
       </div>
       <textarea id="log-input" placeholder='192.168.1.1 - - [21/Feb/2025:10:00:01 +0000] "POST /login HTTP/1.1" 401 512 "-" "curl/7.68"'></textarea>
     </div>
 
-    <div class="error-box" id="error-box"></div>
+    <div class="err-box" id="err-box"></div>
   </div>
 
   <!-- RESULTS -->
   <div id="results">
-
     <div class="threat-banner" id="threat-banner">
-      <div class="threat-left">
-        <span class="threat-pill" id="threat-pill">SECURE</span>
-        <span class="threat-desc" id="threat-desc"></span>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span class="t-pill" id="t-pill"></span>
+        <span class="t-desc" id="t-desc"></span>
       </div>
     </div>
 
     <div class="stats-row">
-      <div class="stat-card green">
-        <div class="stat-value" id="s-total">—</div>
-        <div class="stat-label">Linhas analisadas</div>
-      </div>
-      <div class="stat-card blue">
-        <div class="stat-value" id="s-ips">—</div>
-        <div class="stat-label">IPs únicos</div>
-      </div>
-      <div class="stat-card red">
-        <div class="stat-value" id="s-errors">—</div>
-        <div class="stat-label">Total de erros</div>
-      </div>
-      <div class="stat-card amber">
-        <div class="stat-value" id="s-bf">—</div>
-        <div class="stat-label">Alertas brute force</div>
-      </div>
+      <div class="sc"><div class="sc-val c-green" id="s-total">—</div><div class="sc-lbl">Linhas totais</div></div>
+      <div class="sc"><div class="sc-val c-blue"  id="s-ips">—</div><div class="sc-lbl">IPs únicos</div></div>
+      <div class="sc"><div class="sc-val c-red"   id="s-errors">—</div><div class="sc-lbl">Total erros</div></div>
+      <div class="sc"><div class="sc-val c-amber" id="s-bf">—</div><div class="sc-lbl">Alertas</div></div>
     </div>
 
     <div>
       <div class="tab-bar">
         <button class="tab active" data-tab="overview">Visão Geral</button>
         <button class="tab" data-tab="top-ips">Top IPs</button>
-        <button class="tab" data-tab="brute">Brute Force</button>
+        <button class="tab" data-tab="brute">Brute Force <span class="tab-dot" id="dot-brute"></span></button>
+        <button class="tab" data-tab="ddos">DDoS / Flood <span class="tab-dot" id="dot-ddos"></span></button>
         <button class="tab" data-tab="status">Status HTTP</button>
         <button class="tab" data-tab="flagged">Paths Suspeitos</button>
         <button class="tab" data-tab="scanners">Scanners</button>
@@ -507,74 +357,65 @@
 
     <!-- Overview -->
     <div class="panel active" id="panel-overview">
-      <div class="grid-2">
+      <div class="grid2">
         <div>
-          <div class="panel-header">
-            <span class="panel-title">Distribuição de Status</span>
-          </div>
+          <div class="p-header"><span class="p-title">Distribuição de Status</span></div>
           <div id="status-bars"></div>
         </div>
         <div>
-          <div class="panel-header">
-            <span class="panel-title">Resumo</span>
-          </div>
-          <div class="kv-list" id="quick-stats"></div>
+          <div class="p-header"><span class="p-title">Resumo</span></div>
+          <div class="kv" id="quick-stats"></div>
         </div>
       </div>
     </div>
 
     <!-- Top IPs -->
     <div class="panel" id="panel-top-ips">
-      <div class="panel-header">
-        <span class="panel-title">Requisições por IP</span>
-        <span class="panel-sub" id="top-ips-sub"></span>
-      </div>
+      <div class="p-header"><span class="p-title">Requisições por IP</span><span class="p-sub" id="top-ips-sub"></span></div>
       <div id="ip-bars"></div>
     </div>
 
     <!-- Brute Force -->
     <div class="panel" id="panel-brute">
-      <div class="panel-header">
-        <span class="panel-title">Detecção de Brute Force</span>
-        <span class="panel-sub" id="bf-sub"></span>
-      </div>
+      <div class="p-header"><span class="p-title">Brute Force</span><span class="p-sub" id="bf-sub"></span></div>
       <div id="brute-list"></div>
+    </div>
+
+    <!-- DDoS -->
+    <div class="panel" id="panel-ddos">
+      <div class="p-header">
+        <span class="p-title">DDoS / Flood por Tempo</span>
+        <span class="p-sub">Janela de 60s · threshold &gt;200 reqs</span>
+      </div>
+      <div id="ddos-no-ts" style="display:none">
+        <div class="empty"><div class="empty-icon">⚠</div><p>Log sem timestamps válidos — detecção de DDoS requer timestamps no formato Apache/Nginx.</p></div>
+      </div>
+      <div id="ddos-list"></div>
     </div>
 
     <!-- Status HTTP -->
     <div class="panel" id="panel-status">
-      <div class="panel-header"><span class="panel-title">Códigos HTTP</span></div>
+      <div class="p-header"><span class="p-title">Códigos HTTP</span></div>
       <div class="status-grid" id="status-cards"></div>
     </div>
 
     <!-- Flagged -->
     <div class="panel" id="panel-flagged">
-      <div class="panel-header">
-        <span class="panel-title">Paths Suspeitos</span>
-        <span class="panel-sub">.env · /admin · wp-login · .git · passwd</span>
-      </div>
-      <div class="table-wrap scroll-box">
-        <table>
-          <thead><tr><th>IP</th><th>Status</th><th>Método</th><th>Path</th></tr></thead>
-          <tbody id="flagged-body"></tbody>
-        </table>
+      <div class="p-header"><span class="p-title">Paths Suspeitos</span><span class="p-sub">.env · /admin · wp-login · .git · passwd</span></div>
+      <div class="tbl-wrap">
+        <table><thead><tr><th>IP</th><th>Status</th><th>Método</th><th>Path</th></tr></thead>
+        <tbody id="flagged-body"></tbody></table>
       </div>
     </div>
 
     <!-- Scanners -->
     <div class="panel" id="panel-scanners">
-      <div class="panel-header">
-        <span class="panel-title">Scanners Detectados</span>
-        <span class="panel-sub">Hydra · sqlmap · Nikto · Masscan...</span>
-      </div>
-      <div class="table-wrap scroll-box">
-        <table>
-          <thead><tr><th>IP</th><th>User-Agent</th><th>Path</th></tr></thead>
-          <tbody id="scanners-body"></tbody>
-        </table>
+      <div class="p-header"><span class="p-title">Scanners Detectados</span><span class="p-sub">Hydra · sqlmap · Nikto · Masscan</span></div>
+      <div class="tbl-wrap">
+        <table><thead><tr><th>IP</th><th>User-Agent</th><th>Path</th></tr></thead>
+        <tbody id="scanners-body"></tbody></table>
       </div>
     </div>
-
   </div>
 </main>
 
@@ -582,61 +423,55 @@
   let lastResult = null;
   const $ = id => document.getElementById(id);
 
-  // ── Helpers
-  function statusColor(code) {
-    const c = parseInt(code);
+  const scol = c => {
+    c = parseInt(c);
     if (c >= 500) return 'var(--red)';
     if (c >= 400) return 'var(--amber)';
     if (c >= 300) return 'var(--blue)';
     return 'var(--green)';
-  }
-  function statusClass(code) {
-    const c = parseInt(code);
+  };
+  const scls = c => {
+    c = parseInt(c);
     if (c >= 500) return 'c-red';
     if (c >= 400) return 'c-amber';
     if (c >= 300) return 'c-blue';
     return 'c-green';
-  }
-  function statusLabel(code) {
-    const c = parseInt(code);
+  };
+  const slbl = c => {
+    c = parseInt(c);
     if (c >= 500) return 'Erro Servidor';
     if (c >= 400) return 'Erro Cliente';
     if (c >= 300) return 'Redirect';
     return 'Sucesso';
-  }
-  function fmt(n) { return Number(n).toLocaleString('pt-BR'); }
+  };
+  const fmt = n => Number(n).toLocaleString('pt-BR');
 
-  // ── Threshold
   $('threshold').addEventListener('input', e => $('threshold-val').textContent = e.target.value);
 
-  // ── Drop zone
   const dz = $('drop-zone');
   dz.addEventListener('click', () => $('file-input').click());
   dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag'); });
   dz.addEventListener('dragleave', () => dz.classList.remove('drag'));
-  dz.addEventListener('drop', e => {
-    e.preventDefault(); dz.classList.remove('drag');
-    const f = e.dataTransfer.files[0]; if (f) readFile(f);
-  });
+  dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('drag'); const f = e.dataTransfer.files[0]; if (f) readFile(f); });
   $('file-input').addEventListener('change', e => { if (e.target.files[0]) readFile(e.target.files[0]); });
-  function readFile(file) {
+
+  function readFile(f) {
     const r = new FileReader();
     r.onload = ev => { $('log-input').value = ev.target.result; runAnalyze(); };
-    r.readAsText(file);
+    r.readAsText(f);
   }
 
-  // ── Buttons
   $('btn-analyze').addEventListener('click', runAnalyze);
 
   $('btn-sample').addEventListener('click', async () => {
-    $('btn-sample').innerHTML = '<span class="spinner"></span> Carregando...';
+    $('btn-sample').innerHTML = '<span class="spin"></span>';
     try {
       const res = await fetch('/api/sample');
       const data = await res.json();
       $('log-input').value = data.content;
       runAnalyze();
     } finally {
-      $('btn-sample').innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Sample`;
+      $('btn-sample').innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Sample';
     }
   });
 
@@ -645,18 +480,37 @@
     $('results').style.display = 'none';
     $('input-section').style.display = 'flex';
     $('btn-reset').style.display = 'none';
-    $('btn-export').style.display = 'none';
+    $('btn-export-html').style.display = 'none';
+    $('btn-export-json').style.display = 'none';
     lastResult = null;
   });
 
-  $('btn-export').addEventListener('click', () => {
+  $('btn-export-json').addEventListener('click', () => {
     if (!lastResult) return;
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([JSON.stringify(lastResult, null, 2)], { type: 'application/json' }));
     a.download = 'log-report.json'; a.click();
   });
 
-  // ── Tabs
+  $('btn-export-html').addEventListener('click', async () => {
+    if (!lastResult) return;
+    $('btn-export-html').innerHTML = '<span class="spin"></span>';
+    try {
+      const res = await fetch('/api/export-html', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(lastResult),
+      });
+      const blob = await res.blob();
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `log-report-${new Date().toISOString().slice(0,10)}.html`;
+      a.click();
+    } finally {
+      $('btn-export-html').innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Exportar HTML';
+    }
+  });
+
   document.querySelectorAll('.tab').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -666,15 +520,14 @@
     });
   });
 
-  // ── Analyze
   async function runAnalyze() {
     const content = $('log-input').value.trim();
     if (!content) return;
 
     const btn = $('btn-analyze');
-    btn.innerHTML = '<span class="spinner"></span> Analisando...';
+    btn.innerHTML = '<span class="spin"></span> Analisando...';
     btn.disabled = true;
-    $('error-box').style.display = 'none';
+    $('err-box').style.display = 'none';
 
     try {
       const res = await fetch('/api/analyze', {
@@ -683,145 +536,155 @@
         body: JSON.stringify({ content, threshold: parseInt($('threshold').value) }),
       });
       const data = await res.json();
-      if (!res.ok) { showError(data.error || 'Erro ao analisar.'); return; }
+      if (!res.ok) { showErr(data.error || 'Erro.'); return; }
       lastResult = data;
       render(data);
     } catch {
-      showError('Erro de conexão. O servidor Flask está rodando? (python web.py)');
+      showErr('Erro de conexão. O servidor Flask está rodando? (python web.py)');
     } finally {
-      btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> Analisar`;
+      btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> Analisar';
       btn.disabled = false;
     }
   }
 
-  function showError(msg) {
-    const b = $('error-box'); b.textContent = msg; b.style.display = 'block';
-  }
+  function showErr(msg) { const b = $('err-box'); b.textContent = msg; b.style.display = 'block'; }
 
-  // ── Render
   function render(data) {
     const { summary } = data;
     const level = summary.threat_level;
 
-    // Threat banner
     const banner = $('threat-banner');
     banner.className = 'threat-banner ' + level;
-    $('threat-pill').textContent = level === 'SECURE' ? '✓ Seguro' : level === 'WARNING' ? '⚠ Atenção' : '✕ Crítico';
-    $('threat-desc').textContent =
-      `${data.brute_force.length} IP(s) com brute force · ${data.scanners.length} scanner(s) · ${data.flagged_paths.length} path(s) suspeito(s)`;
+    $('t-pill').textContent = level === 'SECURE' ? '✓ Seguro' : level === 'WARNING' ? '⚠ Atenção' : '✕ Crítico';
 
-    // Stats
+    const ddosCount = (data.ddos_windows || []).length;
+    $('t-desc').textContent =
+      `${data.brute_force.length} brute force · ${data.scanners.length} scanner(s) · ${data.flagged_paths.length} path(s) suspeito(s)` +
+      (ddosCount ? ` · ${ddosCount} janela(s) DDoS` : '');
+
     $('s-total').textContent  = fmt(summary.total_lines);
     $('s-ips').textContent    = fmt(summary.unique_ips);
     $('s-errors').textContent = fmt(summary.total_errors);
-    $('s-bf').textContent     = fmt(data.brute_force.length);
+    $('s-bf').textContent     = fmt(data.brute_force.length + ddosCount);
 
-    // Status bars (overview)
+    // dot indicators
+    $('dot-brute').className = 'tab-dot' + (data.brute_force.length ? ' show' : '');
+    $('dot-ddos').className  = 'tab-dot' + (ddosCount ? ' show' : '');
+
     const parsed = summary.parsed_entries || 1;
+
+    // Status bars
     $('status-bars').innerHTML = Object.entries(data.status_codes)
       .sort((a,b) => b[1]-a[1])
-      .map(([code, count]) => `
+      .map(([c,n]) => `
         <div class="bar-row">
-          <span class="bar-key ${statusClass(code)}">${code}</span>
-          <div class="bar-track">
-            <div class="bar-fill" style="width:${(count/parsed*100).toFixed(1)}%;background:${statusColor(code)}"></div>
-          </div>
-          <span class="bar-val">${fmt(count)}</span>
+          <span class="bar-key ${scls(c)}">${c}</span>
+          <div class="bar-track"><div class="bar-fill" style="width:${(n/parsed*100).toFixed(1)}%;background:${scol(c)}"></div></div>
+          <span class="bar-val">${fmt(n)}</span>
         </div>`).join('');
 
     // Quick stats
     $('quick-stats').innerHTML = [
-      ['Entradas parseadas',  summary.parsed_entries],
-      ['401 Unauthorized',    data.status_codes['401'] || 0],
-      ['403 Forbidden',       data.status_codes['403'] || 0],
-      ['500 Server Error',    data.status_codes['500'] || 0],
-      ['Brute Force Alerts',  data.brute_force.length],
-      ['Paths Suspeitos',     data.flagged_paths.length],
-      ['Scanners',            data.scanners.length],
-    ].map(([k,v]) => `
-      <div class="kv-row">
-        <span class="kv-key">${k}</span>
-        <span class="kv-val">${fmt(v)}</span>
-      </div>`).join('');
+      ['Entradas parseadas', summary.parsed_entries],
+      ['401 Unauthorized',   data.status_codes['401']||0],
+      ['403 Forbidden',      data.status_codes['403']||0],
+      ['500 Server Error',   data.status_codes['500']||0],
+      ['Brute Force',        data.brute_force.length],
+      ['Janelas DDoS',       ddosCount],
+      ['Paths suspeitos',    data.flagged_paths.length],
+      ['Scanners',           data.scanners.length],
+    ].map(([k,v]) => `<div class="kv-row"><span class="kv-k">${k}</span><span class="kv-v">${fmt(v)}</span></div>`).join('');
 
     // Top IPs
-    const max = data.top_ips[0]?.count || 1;
+    const max = data.top_ips[0]?.count||1;
     $('top-ips-sub').textContent = `${data.top_ips.length} IPs`;
-    $('ip-bars').innerHTML = data.top_ips.map((item, i) => `
+    $('ip-bars').innerHTML = data.top_ips.map((item,i) => `
       <div class="bar-row">
-        <span class="rank">#${i+1}</span>
-        <span class="ip-label" style="color:${i===0?'var(--red)':'var(--text-2)'}">${item.ip}</span>
-        <div class="bar-track">
-          <div class="bar-fill" style="width:${(item.count/max*100).toFixed(1)}%;background:${i===0?'var(--red)':i<3?'var(--amber)':'var(--blue)'}"></div>
-        </div>
-        <span class="bar-val">${fmt(item.count)} reqs</span>
+        <span class="bar-key" style="min-width:24px;color:var(--dim2)">#${i+1}</span>
+        <span style="font-family:'Geist Mono';font-size:12px;min-width:140px;color:${i===0?'var(--red)':'var(--dim)'}">${item.ip}</span>
+        <div class="bar-track"><div class="bar-fill" style="width:${(item.count/max*100).toFixed(1)}%;background:${i===0?'var(--red)':i<3?'var(--amber)':'var(--blue)'}"></div></div>
+        <span class="bar-val">${fmt(item.count)}</span>
       </div>`).join('');
 
     // Brute force
-    $('bf-sub').textContent = data.brute_force.length ? `${data.brute_force.length} fonte(s) detectada(s)` : '';
-    $('brute-list').innerHTML = data.brute_force.length === 0
-      ? `<div class="empty"><div class="empty-icon">✓</div><p>Nenhum ataque de brute force detectado</p></div>`
+    $('bf-sub').textContent = data.brute_force.length ? `${data.brute_force.length} fonte(s)` : '';
+    $('brute-list').innerHTML = !data.brute_force.length
+      ? `<div class="empty"><div class="empty-icon">✓</div><p>Nenhum ataque detectado</p></div>`
       : data.brute_force.map(s => `
         <div class="alert-card">
-          <span class="alert-ip">${s.ip}</span>
-          <div class="alert-metrics">
-            <div class="alert-metric">
-              <div class="alert-metric-val c-red">${fmt(s.auth_failures)}</div>
-              <div class="alert-metric-lbl">falhas auth</div>
-            </div>
-            <div class="alert-metric">
-              <div class="alert-metric-val">${fmt(s.total_requests)}</div>
-              <div class="alert-metric-lbl">requisições</div>
-            </div>
-            <div class="alert-metric">
-              <div class="alert-metric-val c-blue">${fmt(s.unique_paths)}</div>
-              <div class="alert-metric-lbl">paths únicos</div>
-            </div>
-            <div class="alert-metric">
-              <div class="alert-metric-val ${s.threat_score>60?'c-red':'c-amber'}">${s.threat_score}</div>
-              <div class="alert-metric-lbl">threat score</div>
-            </div>
+          <div class="a-ip"><span class="a-dot"></span>${s.ip}</div>
+          <div class="a-metrics">
+            <div class="a-m"><div class="a-mv c-red">${fmt(s.auth_failures)}</div><div class="a-ml">falhas</div></div>
+            <div class="a-m"><div class="a-mv">${fmt(s.total_requests)}</div><div class="a-ml">reqs</div></div>
+            <div class="a-m"><div class="a-mv c-blue">${fmt(s.unique_paths)}</div><div class="a-ml">paths</div></div>
+            <div class="a-m"><div class="a-mv ${s.threat_score>60?'c-red':'c-amber'}">${s.threat_score}</div><div class="a-ml">score</div></div>
           </div>
         </div>`).join('');
+
+    // DDoS
+    const windows = data.ddos_windows || [];
+    if (!summary.has_timestamps) {
+      $('ddos-no-ts').style.display = 'block';
+      $('ddos-list').innerHTML = '';
+    } else if (!windows.length) {
+      $('ddos-no-ts').style.display = 'none';
+      $('ddos-list').innerHTML = `<div class="empty"><div class="empty-icon">✓</div><p>Nenhum flood detectado na janela de 60 segundos</p></div>`;
+    } else {
+      $('ddos-no-ts').style.display = 'none';
+      $('ddos-list').innerHTML = windows.map(w => `
+        <div class="ddos-card">
+          <div class="ddos-header">
+            <span class="ddos-badge">FLOOD DETECTADO</span>
+            <span class="ddos-time">${w.start} → ${w.end}</span>
+          </div>
+          <div class="ddos-stats">
+            <div><div class="ddos-stat-val">${fmt(w.total_requests)}</div><div class="ddos-stat-lbl">requisições</div></div>
+            <div><div class="ddos-stat-val" style="color:var(--amber)">${fmt(w.unique_ips)}</div><div class="ddos-stat-lbl">IPs únicos</div></div>
+          </div>
+          <div class="ddos-ips">
+            ${w.top_ips.map(t=>`<span class="ddos-ip-tag">${t.ip} <b style="color:var(--red)">${t.count}</b></span>`).join('')}
+          </div>
+        </div>`).join('');
+    }
 
     // Status cards
     $('status-cards').innerHTML = Object.entries(data.status_codes)
       .sort((a,b) => b[1]-a[1])
-      .map(([code, count]) => `
-        <div class="status-card" style="border-left-color:${statusColor(code)}">
-          <div class="status-code ${statusClass(code)}">${code}</div>
-          <div class="status-count">${fmt(count)}</div>
-          <div class="status-type">${statusLabel(code)}</div>
+      .map(([c,n]) => `
+        <div class="s-card" style="border-left-color:${scol(c)}">
+          <div class="s-code ${scls(c)}">${c}</div>
+          <div class="s-count">${fmt(n)}</div>
+          <div class="s-type">${slbl(c)}</div>
         </div>`).join('');
 
     // Flagged
-    $('flagged-body').innerHTML = data.flagged_paths.length === 0
-      ? `<tr><td colspan="4"><div class="empty"><div class="empty-icon">✓</div><p>Nenhum path suspeito encontrado</p></div></td></tr>`
+    $('flagged-body').innerHTML = !data.flagged_paths.length
+      ? `<tr><td colspan="4"><div class="empty"><div class="empty-icon">✓</div><p>Nenhum path suspeito</p></div></td></tr>`
       : data.flagged_paths.map(e => `
         <tr>
           <td class="mono c-amber">${e.ip}</td>
-          <td class="mono ${statusClass(e.status)}">${e.status}</td>
+          <td class="mono ${scls(e.status)}">${e.status}</td>
           <td class="mono c-dim">${e.method}</td>
           <td class="mono c-red">${e.path}</td>
         </tr>`).join('');
 
     // Scanners
     const seen = new Set();
-    const unique = data.scanners.filter(s => { const k=s.ip+s.agent; return !seen.has(k) && seen.add(k); });
-    $('scanners-body').innerHTML = unique.length === 0
+    const uniq = data.scanners.filter(s => { const k=s.ip+s.agent; return !seen.has(k)&&seen.add(k); });
+    $('scanners-body').innerHTML = !uniq.length
       ? `<tr><td colspan="3"><div class="empty"><div class="empty-icon">✓</div><p>Nenhum scanner detectado</p></div></td></tr>`
-      : unique.map(s => `
+      : uniq.map(s => `
         <tr>
           <td class="mono c-amber">${s.ip}</td>
-          <td class="mono c-red">${s.agent || '—'}</td>
+          <td class="mono c-red">${s.agent||'—'}</td>
           <td class="mono c-dim">${s.path}</td>
         </tr>`).join('');
 
-    // Show
     $('input-section').style.display = 'none';
     $('results').style.display = 'flex';
     $('btn-reset').style.display = '';
-    $('btn-export').style.display = '';
+    $('btn-export-html').style.display = '';
+    $('btn-export-json').style.display = '';
   }
 </script>
 </body>
